@@ -63,6 +63,13 @@ namespace PatientInformationPortalWeb.Data
               new Allergies { AllergiesID=9,AllergiesName = "No Allergies" }
              );
 
+            modelBuilder.Entity<DiseaseInformation>().HasData(
+               new DiseaseInformation { DiseaseID = 1, DiseaseName = "Hepatitis A" },
+               new DiseaseInformation { DiseaseID = 2, DiseaseName = "Influenza (Flu)" },
+               new DiseaseInformation { DiseaseID = 3, DiseaseName = "COVID-19" },
+               new DiseaseInformation { DiseaseID = 4, DiseaseName = "Common Cold" }
+            );
+
         }
     }
 }

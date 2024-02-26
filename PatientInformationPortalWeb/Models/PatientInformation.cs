@@ -7,6 +7,8 @@ namespace PatientInformationPortalWeb.Models
         [Key]
         public int PatientID { get; set; }
         public string Name { get; set; }
+        public int DiseaseID { get; set; }
+        public DiseaseInformation DiseaseInformation { get; set; }
         public List<NCDDetail> NCDs { get; set; }
         public List<AllergiesDetail> Allergies { get; set; }
         public EpilepsyStatus EpilepsyStatus { get; set; }

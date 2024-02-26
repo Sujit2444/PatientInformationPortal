@@ -19,6 +19,11 @@ namespace PatientInformationPortalWeb.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<PatientInformation>()
+                .HasOne(pi => pi.DiseaseInformation)
+                .WithMany(di => di.Patients)
+                .HasForeignKey(pi => pi.DiseaseID);
+
             modelBuilder.Entity<NCDDetail>()
                .HasOne(nd => nd.Patient)
                .WithMany(p => p.NCDs)

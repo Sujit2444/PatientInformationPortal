@@ -7,5 +7,7 @@ namespace PatientInformationPortalWeb.Models
         [Key]
         public int DiseaseID { get; set; }
         public string DiseaseName { get; set; }
+        public List<PatientInformation> Patients { get; set; }
+        
     }
 }

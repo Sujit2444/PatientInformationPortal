@@ -5,8 +5,11 @@ namespace PatientInformationPortalWeb.Models
     public class AllergiesDetail
     {
         [Key]
-        public int AllergiesDetailId { get; set; }
-        public PatientInformation PatientID { get; set; }
-        public AllergyInformation AllergiesID { get; set; }
+        public int ID { get; set; }
+        public int PatientID { get; set; }
+        public int? AllergiesID { get; set; }
+    
+        public PatientInformation Patient { get; set; }
+        public Allergies Allergies { get; set; }
     }
 }

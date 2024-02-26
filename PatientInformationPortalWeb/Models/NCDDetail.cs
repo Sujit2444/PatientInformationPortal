@@ -6,9 +6,11 @@ namespace PatientInformationPortalWeb.Models
     public class NCDDetail
     {
         [Key]
-        public int NCDDetailID { get; set; }
-        public PatientInformation PatientID { get; set; }
-        public NCD NCDID { get; set; }
+        public int ID { get; set; }
+        public int PatientID { get; set; }
+        public int? NCDID { get; set; }
+        public PatientInformation Patient { get; set; }
+        public NCD NCD { get; set; }
 
     }
 }

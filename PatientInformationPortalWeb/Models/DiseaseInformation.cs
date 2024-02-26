@@ -6,6 +6,6 @@ namespace PatientInformationPortalWeb.Models
     {
         [Key]
         public int DiseaseID { get; set; }
-        public int DiseaseName { get; set; }
+        public string DiseaseName { get; set; }
     }
 }

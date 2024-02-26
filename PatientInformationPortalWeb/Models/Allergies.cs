@@ -2,7 +2,7 @@
 
 namespace PatientInformationPortalWeb.Models
 {
-    public class AllergyInformation
+    public class Allergies
     {
         [Key]
         public int AllergiesID { get; set; }

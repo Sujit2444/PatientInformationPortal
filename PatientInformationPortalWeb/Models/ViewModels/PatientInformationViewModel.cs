@@ -14,13 +14,13 @@ namespace PatientInformationPortalWeb.Models.ViewModels
         public SelectList? DiseaseInformationSelectList { get; set; }
         public int SelectedEpilepsyStatus { get; set; }
         public List<SelectListItem>? EpilepsyStatusSelectList { get; set; }        
-        public int[]? SelectedLeftNCDs { get; set; }
+        public List<int>? SelectedLeftNCDs { get; set; }
         public SelectList? LeftNCDSelectList { get; set; }
-        public int[]? SelectedRightNCDs { get; set; }
+        public List<int>? SelectedRightNCDs { get; set; }
         public SelectList? RightNCDSelectList { get; set; }      
-        public int[]? SelectedLeftAllergies { get; set; }        
+        public List<int>? SelectedLeftAllergies { get; set; }        
         public SelectList? LeftAllergiesSelectList { get; set; }
-        public int[]? SelectedRightAllergies { get; set; }
+        public List<int>? SelectedRightAllergies { get; set; }
         public SelectList? RightAllergiesSelectList { get; set; }
 
     }

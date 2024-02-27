@@ -26,6 +26,98 @@ namespace PatientInformationPortalWeb.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> UserView(int id)
+        {
+            PatientInformationViewModel patientInformationViewModel = new PatientInformationViewModel();
+            try
+            {
+               PatientInformation patientInformation=await _patientInformationRepository.GetPatientInformationById(id);
+                if (patientInformation == null)
+                {
+                    return RedirectToAction("Index", "PatientInformation");
+                }
+
+                patientInformationViewModel.Name = patientInformation.Name;
+                patientInformationViewModel.PatientID = patientInformation.PatientID;
+                patientInformationViewModel.SelectedDiseaseInformation=patientInformation.DiseaseID;
+                patientInformationViewModel.SelectedEpilepsyStatus=Convert.ToInt32(patientInformation.EpilepsyStatus);
+               
+                patientInformationViewModel.RightNCDSelectList = new SelectList(
+                    patientInformation.NCDs.Select(ncd => new { Id = ncd.NCDID, Name = ncd.NCD.NCDName }),
+                    "Id",
+                    "Name"
+                );
+                patientInformationViewModel.RightAllergiesSelectList= new SelectList(
+                    patientInformation.Allergies.Select(al => new { Id = al.AllergiesID, Name = al.Allergies.AllergiesName }),
+                    "Id",
+                    "Name"
+                );
+                await PopulateAllSelectList(patientInformationViewModel);
+
+                List<int> ncdIDsToRemove = patientInformation.NCDs.Select(ncd => ncd.NCDID).ToList();
+                List<SelectListItem> ncdSelectListItem = patientInformationViewModel.LeftNCDSelectList
+                 .Where(item => !ncdIDsToRemove.Contains(Convert.ToInt32(item.Value)))
+                    .ToList();
+                patientInformationViewModel.LeftNCDSelectList = new SelectList(ncdSelectListItem, "Value", "Text");
+
+
+                List<int> allergiesIDsToRemove = patientInformation.Allergies.Select(allergy => allergy.AllergiesID).ToList();
+                List<SelectListItem> algSelectListItem = patientInformationViewModel.LeftAllergiesSelectList
+                 .Where(item => !allergiesIDsToRemove.Contains(Convert.ToInt32(item.Value)))
+                    .ToList();
+                patientInformationViewModel.LeftAllergiesSelectList = new SelectList(algSelectListItem, "Value", "Text");
+
+            }
+            catch (Exception ex)
+            { }
+            return View(patientInformationViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UserView(PatientInformationViewModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    PatientInformation patientInformation = new PatientInformation();
+                    patientInformation.PatientID = model.PatientID;
+                    patientInformation.Name = model.Name;
+                    patientInformation.DiseaseID = model.SelectedDiseaseInformation;
+                    patientInformation.EpilepsyStatus = (EpilepsyStatus)model.SelectedEpilepsyStatus;
+                    patientInformation.NCDs = new List<NCDDetail>();
+                    if (model.SelectedRightNCDs != null)
+                    {
+                        foreach (var item in model.SelectedRightNCDs)
+                        {
+                            patientInformation.NCDs.Add(new NCDDetail { NCDID = item });
+                        }
+                    }
+
+                    patientInformation.Allergies = new List<AllergiesDetail>();
+                    if (model.SelectedRightAllergies != null)
+                    {
+                        foreach (var item in model.SelectedRightAllergies)
+                        {
+                            patientInformation.Allergies.Add(
+                                new AllergiesDetail { AllergiesID = item }
+                            );
+                        }
+                    }
+
+                    await _patientInformationRepository.UpdatePatient(patientInformation);
+                    return RedirectToAction("Index", "PatientInformation");
+                }
+
+                await PopulateAllSelectList(model);
+            }
+            catch (Exception ex)
+            { }
+
+            return View(model);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             List<PatientInformation> patientInformationList = new List<PatientInformation>();
@@ -34,10 +126,7 @@ namespace PatientInformationPortalWeb.Controllers
                patientInformationList = await _patientInformationRepository.GetAllPatientInformation();
             }
             catch (Exception ex)
-            {
-
-                throw;
-            }
+            { }
             return View(patientInformationList);
         }
 

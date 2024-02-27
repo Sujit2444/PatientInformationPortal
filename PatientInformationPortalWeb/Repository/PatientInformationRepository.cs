@@ -1,4 +1,5 @@
-﻿using PatientInformationPortalWeb.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using PatientInformationPortalWeb.Data;
 using PatientInformationPortalWeb.Models;
 
 namespace PatientInformationPortalWeb.Repository
@@ -11,9 +12,15 @@ namespace PatientInformationPortalWeb.Repository
             _applicationDBContext = applicationDBContext;
         }
 
-        public Task AddPatient(PatientInformation patientInformation)
+        public async Task AddPatient(PatientInformation patientInformation)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _applicationDBContext.PatientsInformation.AddAsync(patientInformation);
+                await _applicationDBContext.SaveChangesAsync();
+            }
+            catch (Exception)
+            { }
         }
 
         public Task DeletePatient(int id)
@@ -21,9 +28,9 @@ namespace PatientInformationPortalWeb.Repository
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<PatientInformation>> GetAllPatientInformation()
+        public async Task<List<PatientInformation>> GetAllPatientInformation()
         {
-            throw new NotImplementedException();
+           return await _applicationDBContext.PatientsInformation.ToListAsync();
         }
 
         public Task<PatientInformation> GetPatientInformationById(int id)

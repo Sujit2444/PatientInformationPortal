@@ -24,9 +24,20 @@ namespace PatientInformationPortalWeb.Controllers
             _allergiesRepository = allergiesRepository;
             _patientInformationRepository = patientInformationRepository;
         }
+
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            List<PatientInformation> patientInformationList= await _patientInformationRepository.GetAllPatientInformation();
+            List<PatientInformation> patientInformationList = new List<PatientInformation>();
+            try
+            {
+               patientInformationList = await _patientInformationRepository.GetAllPatientInformation();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
             return View(patientInformationList);
         }
 

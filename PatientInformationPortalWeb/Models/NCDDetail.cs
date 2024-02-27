@@ -8,7 +8,7 @@ namespace PatientInformationPortalWeb.Models
         [Key]
         public int ID { get; set; }
         public int PatientID { get; set; }
-        public int? NCDID { get; set; }
+        public int NCDID { get; set; }
         public PatientInformation Patient { get; set; }
         public NCD NCD { get; set; }
 

@@ -26,6 +26,77 @@ namespace PatientInformationPortalWeb.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            List<PatientInformation> patientInformationList = new List<PatientInformation>();
+            try
+            {
+                patientInformationList = await _patientInformationRepository.GetAllPatientInformation();
+            }
+            catch (Exception ex)
+            { }
+            return View(patientInformationList);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddPatient()
+        {
+            PatientInformationViewModel patientInformationViewModel =
+                new PatientInformationViewModel();
+            try
+            {
+                await PopulateAllSelectList(patientInformationViewModel);
+            }
+            catch (Exception ex)
+            { }
+
+            return View(patientInformationViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddPatient(PatientInformationViewModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    PatientInformation patientInformation = new PatientInformation();
+                    patientInformation.Name = model.Name;
+                    patientInformation.DiseaseID = model.SelectedDiseaseInformation;
+                    patientInformation.EpilepsyStatus = (EpilepsyStatus)model.SelectedEpilepsyStatus;
+                    patientInformation.NCDs = new List<NCDDetail>();
+                    if (model.SelectedRightNCDs != null)
+                    {
+                        foreach (var item in model.SelectedRightNCDs)
+                        {
+                            patientInformation.NCDs.Add(new NCDDetail { NCDID = item });
+                        }
+                    }
+
+                    patientInformation.Allergies = new List<AllergiesDetail>();
+                    if (model.SelectedRightAllergies != null)
+                    {
+                        foreach (var item in model.SelectedRightAllergies)
+                        {
+                            patientInformation.Allergies.Add(
+                                new AllergiesDetail { AllergiesID = item }
+                            );
+                        }
+                    }
+
+                    await _patientInformationRepository.AddPatient(patientInformation);
+                    return RedirectToAction("Index", "PatientInformation");
+                }
+
+                await PopulateAllSelectList(model);
+            }
+            catch (Exception ex)
+            { }
+
+            return View(model);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> UserView(int id)
         {
             PatientInformationViewModel patientInformationViewModel = new PatientInformationViewModel();
@@ -117,75 +188,17 @@ namespace PatientInformationPortalWeb.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Index()
-        {
-            List<PatientInformation> patientInformationList = new List<PatientInformation>();
-            try
-            {
-               patientInformationList = await _patientInformationRepository.GetAllPatientInformation();
-            }
-            catch (Exception ex)
-            { }
-            return View(patientInformationList);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> AddPatient()
-        {
-            PatientInformationViewModel patientInformationViewModel =
-                new PatientInformationViewModel();
-            try
-            {
-                await PopulateAllSelectList(patientInformationViewModel);
-            }
-            catch (Exception ex)
-            { }
-
-            return View(patientInformationViewModel);
-        }
-
         [HttpPost]
-        public async Task<IActionResult> AddPatient(PatientInformationViewModel model)
+        public async Task<IActionResult> Delete(PatientInformationViewModel model)
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    PatientInformation patientInformation = new PatientInformation();
-                    patientInformation.Name = model.Name;
-                    patientInformation.DiseaseID = model.SelectedDiseaseInformation;
-                    patientInformation.EpilepsyStatus =(EpilepsyStatus)model.SelectedEpilepsyStatus;
-                    patientInformation.NCDs = new List<NCDDetail>();
-                    if (model.SelectedRightNCDs != null)
-                    {
-                        foreach (var item in model.SelectedRightNCDs)
-                        {
-                            patientInformation.NCDs.Add(new NCDDetail { NCDID = item });
-                        }
-                    }
-
-                    patientInformation.Allergies = new List<AllergiesDetail>();
-                    if (model.SelectedRightAllergies != null)
-                    {
-                        foreach (var item in model.SelectedRightAllergies)
-                        {
-                            patientInformation.Allergies.Add(
-                                new AllergiesDetail { AllergiesID = item }
-                            );
-                        }
-                    }
-
-                    await _patientInformationRepository.AddPatient(patientInformation);
-                    return RedirectToAction("Index", "PatientInformation");
-                }
-
-                await PopulateAllSelectList(model);
+                await _patientInformationRepository.DeletePatient(model.PatientID);
             }
             catch (Exception ex)
             { }
 
-            return View(model);
+            return RedirectToAction("Index");
         }
 
         private async Task PopulateAllSelectList(PatientInformationViewModel model)

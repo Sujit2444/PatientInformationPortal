@@ -2,7 +2,7 @@
 {
     public enum EpilepsyStatus
     {
-        Yes,
-        No
+        No,
+        Yes
     }
 }

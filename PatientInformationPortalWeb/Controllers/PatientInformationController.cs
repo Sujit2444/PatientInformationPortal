@@ -24,9 +24,10 @@ namespace PatientInformationPortalWeb.Controllers
             _allergiesRepository = allergiesRepository;
             _patientInformationRepository = patientInformationRepository;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            List<PatientInformation> patientInformationList= await _patientInformationRepository.GetAllPatientInformation();
+            return View(patientInformationList);
         }
 
         [HttpGet]
@@ -36,52 +37,10 @@ namespace PatientInformationPortalWeb.Controllers
                 new PatientInformationViewModel();
             try
             {
-                List<DiseaseInformation> diseaseList =
-                    await _diseaseInformationRepository.GetAllDiseaseInformation();
-
-                patientInformationViewModel.DiseaseInformationSelectList = new SelectList(
-                    diseaseList.Select(
-                        disease => new { Id = disease.DiseaseID, Name = disease.DiseaseName }
-                    ),
-                    "Id",
-                    "Name"
-                );
-                ;
-
-                patientInformationViewModel.EpilepsyStatusSelectList = new List<SelectListItem>
-                {
-                    new SelectListItem
-                    {
-                        Value = Convert.ToInt32(EpilepsyStatus.Yes).ToString(),
-                        Text = EpilepsyStatus.Yes.ToString()
-                    },
-                    new SelectListItem
-                    {
-                        Value = Convert.ToInt32(EpilepsyStatus.No).ToString(),
-                        Text = EpilepsyStatus.No.ToString()
-                    }
-                };
-
-                List<NCD> ncdList = await _nCDRepository.GetAllNCDs();
-                patientInformationViewModel.LeftNCDSelectList = new SelectList(
-                    ncdList.Select(ncd => new { Id = ncd.NCDID, Name = ncd.NCDName }),
-                    "Id",
-                    "Name"
-                );
-
-                List<Allergies> allergies = await _allergiesRepository.GetAllAllergies();
-                patientInformationViewModel.LeftAllergiesSelectList = new SelectList(
-                    allergies.Select(
-                        allergy => new { Id = allergy.AllergiesID, Name = allergy.AllergiesName }
-                    ),
-                    "Id",
-                    "Name"
-                );
+                await PopulateAllSelectList(patientInformationViewModel);
             }
             catch (Exception ex)
-            {
-                //throw;
-            }
+            { }
 
             return View(patientInformationViewModel);
         }
@@ -96,8 +55,7 @@ namespace PatientInformationPortalWeb.Controllers
                     PatientInformation patientInformation = new PatientInformation();
                     patientInformation.Name = model.Name;
                     patientInformation.DiseaseID = model.SelectedDiseaseInformation;
-                    patientInformation.EpilepsyStatus =
-                        (EpilepsyStatus)model.SelectedEpilepsyStatus;
+                    patientInformation.EpilepsyStatus =(EpilepsyStatus)model.SelectedEpilepsyStatus;
                     patientInformation.NCDs = new List<NCDDetail>();
                     if (model.SelectedRightNCDs != null)
                     {
@@ -122,8 +80,19 @@ namespace PatientInformationPortalWeb.Controllers
                     return RedirectToAction("Index", "PatientInformation");
                 }
 
-                List<DiseaseInformation> diseaseList =
-                    await _diseaseInformationRepository.GetAllDiseaseInformation();
+                await PopulateAllSelectList(model);
+            }
+            catch (Exception ex)
+            { }
+
+            return View(model);
+        }
+
+        private async Task PopulateAllSelectList(PatientInformationViewModel model)
+        {
+            try
+            {
+                List<DiseaseInformation> diseaseList = await _diseaseInformationRepository.GetAllDiseaseInformation();
                 model.DiseaseInformationSelectList = new SelectList(
                     diseaseList.Select(
                         disease => new { Id = disease.DiseaseID, Name = disease.DiseaseName }
@@ -131,8 +100,6 @@ namespace PatientInformationPortalWeb.Controllers
                     "Id",
                     "Name"
                 );
-                ;
-
                 model.EpilepsyStatusSelectList = new List<SelectListItem>
                 {
                     new SelectListItem
@@ -164,11 +131,7 @@ namespace PatientInformationPortalWeb.Controllers
                 );
             }
             catch (Exception ex)
-            {
-                //throw;
-            }
-
-            return View(model);
+            { }
         }
     }
 }

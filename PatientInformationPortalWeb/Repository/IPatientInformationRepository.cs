@@ -5,11 +5,12 @@ namespace PatientInformationPortalWeb.Repository
 {
     public interface IPatientInformationRepository
     {
-        Task<IEnumerable<PatientInformation>> GetAllPatientInformation();
+        Task<List<PatientInformation>> GetAllPatientInformation();
         Task<PatientInformation> GetPatientInformationById(int id);
         Task AddPatient(PatientInformation patientInformation);
         Task UpdatePatient(PatientInformation patientInformation);
 
         Task DeletePatient(int id);
+
     }
 }

@@ -14,7 +14,6 @@ namespace PatientInformationPortalWeb.Repository
         public async Task<List<Allergies>> GetAllAllergies()
         {
             return await _applicationDBContext.Allergies.ToListAsync();
-            //throw new NotImplementedException();
         }
     }
 }

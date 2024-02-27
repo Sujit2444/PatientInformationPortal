@@ -14,7 +14,6 @@ namespace PatientInformationPortalWeb.Repository
         public async Task<List<NCD>> GetAllNCDs()
         {
             return await _applicationDBContext.NCDs.ToListAsync();
-            //throw new NotImplementedException();
         }
     }
 }

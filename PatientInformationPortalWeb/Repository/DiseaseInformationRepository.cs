@@ -14,7 +14,6 @@ namespace PatientInformationPortalWeb.Repository
         public async Task<List<DiseaseInformation>> GetAllDiseaseInformation()
         {
             return await _applicationDBContext.DiseaseInformation.ToListAsync();
-            //throw new NotImplementedException();
         }
     }
 }

@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="col-md-10">
-                <input asp-for="PatientID" class="form-control elementPosition"  readonly/>  
+                <input asp-for="PatientID" class="form-control elementPosition" readonly />
             </div>
         </div>
 
@@ -111,8 +111,9 @@
         </div>
 
         <div class="row createMargin">
-            <div class="col-md-2 offset-md-6">
-                <button class="btn btn-primary btnWidth" type="submit">Save</button>
+            <div class="col-md-2 offset-md-6" style="padding-left:0px;">
+                <button class="btn btn-primary btnUpdateDeleteWidth" type="submit">Save</button>
+                <button class="btn btn-danger btnUpdateDeleteWidth" type="submit" asp-controller="PatientInformation" asp-action="Delete">Delete</button>
             </div>
         </div>
 

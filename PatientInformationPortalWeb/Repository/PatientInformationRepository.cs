@@ -19,13 +19,23 @@ namespace PatientInformationPortalWeb.Repository
                 await _applicationDBContext.PatientsInformation.AddAsync(patientInformation);
                 await _applicationDBContext.SaveChangesAsync();
             }
-            catch (Exception)
+            catch (Exception ex)
             { }
         }
 
-        public Task DeletePatient(int id)
+        public async Task DeletePatient(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                PatientInformation patientInformation =await _applicationDBContext.PatientsInformation.FindAsync(id);
+                if (patientInformation != null)
+                {
+                    _applicationDBContext.PatientsInformation.Remove(patientInformation);
+                    await _applicationDBContext.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {}
         }
 
         public async Task<List<PatientInformation>> GetAllPatientInformation()
